@@ -2,7 +2,7 @@ defmodule HanoIexTests do
   use ExUnit.Case
 
   test "base case" do
-    steps = HanoIex.build_hanoi 1
+   steps = Hanoi.build_hanoi 1
 
     assert steps ==
     [
@@ -16,7 +16,7 @@ defmodule HanoIexTests do
   end
 
   test "2 disks" do
-    steps = HanoIex.build_hanoi 2
+    steps = Hanoi.build_hanoi 2
     assert steps == [
       { :A, :A, [ A: [1, 2],
                   B: [ ],

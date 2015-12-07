@@ -1,4 +1,4 @@
-defmodule HanoIex do
+defmodule Hanoi do
   def move collector, 0, _ do
     collector
   end
