@@ -4,14 +4,12 @@ defmodule Hanoi do
     moveTower(n, [:A, :B, :C])
   end
 
-  def moveTower(n, [source, dest, via]) do
-    if n > 0 do
-      moveTower(n - 1, [source, via, dest]) ++
-      moveDisk([source, dest]) ++
-      moveTower(n - 1, [via, dest, source])
-    else
-      []
-    end
+  def moveTower(0, _), do: []
+
+  def moveTower(n, [source, dest, via]) when n > 0 do
+    moveTower(n - 1, [source, via, dest]) ++
+    moveDisk([source, dest]) ++
+    moveTower(n - 1, [via, dest, source])
   end
 
   def moveDisk [a, b] do
