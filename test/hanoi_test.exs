@@ -1,38 +1,9 @@
 defmodule HanoIexTests do
   use ExUnit.Case
 
-  test "base case" do
-    { result , m } = [[1, 2], [], []] |> Hanoi.solve
-
-    assert result == [[], [], [1, 2]]
-    # [
-    #   { :A, :A, [ A: [1],
-    #               B: [ ],
-    #               C: [ ] ] },
-    #   { :A, :C, [ A: [ ],
-    #               B: [ ],
-    #               C: [1] ] }
-    # ]
-  end
-
-  test "2 disks" do
-    # steps = Hanoi.build_hanoi 2
-    # assert steps == [
-    #   { :A, :A, [ A: [1, 2],
-    #               B: [ ],
-    #               C: [ ] ] },
-    #   { :A, :B, [ A: [2],
-    #               B: [1],
-    #               C: [ ] ]
-    #   },
-    #   { :A, :C, [ A: [ ],
-    #               B: [1],
-    #               C: [2] ]
-    #   },
-    #   { :B, :C, [ A: [ ],
-    #               B: [ ],
-    #               C: [1, 2] ]
-    #   }
-    # ]
+  test "one disk" do
+    assert Hanoi.solve(1) |> Enum.count == 1
+    assert Hanoi.solve(2) |> Enum.count == 3
+    assert Hanoi.solve(3) |> Enum.count == 7
   end
 end
