@@ -12,6 +12,8 @@ defmodule Hanoi do
 
   defp moveDisk([a, b]), do: [{ a, b }]
 
+  # play sequence
+
   def play_sequence n do
     start = { {:hanoi, :start }, A: Enum.to_list(1..n),
                                  B: [],
@@ -26,7 +28,7 @@ defmodule Hanoi do
   end
 
   defp _play_sequence { source, dest }, state do
-    { move, pegs } = hd(state)
+    { _, pegs } = hd(state)
     spare = hd([:A, :B, :C] -- [source, dest])
 
     # towers
@@ -34,17 +36,12 @@ defmodule Hanoi do
     dest_tower   = pegs[dest]
     spare_tower  = pegs[spare]
 
-    result =
-    if !is_nil(source_tower) and length(source_tower) > 0 do
-      [ { source, tl(source_tower) },
-        { dest, [ hd(source_tower) | dest_tower ] },
-        { spare, spare_tower } ]
-    else
-      [ { source, source_tower },
-        { dest, dest_tower     },
-        { spare, spare_tower   } ]
-    end
+    result = List.keysort([
+      { source, tl(source_tower) },
+      { dest, [ hd(source_tower) | dest_tower ] },
+      { spare, spare_tower }
+    ], 0)
 
-    [{ {source, dest} , List.keysort(result, 0) }]
+    [ { {source, dest} , result } ]
   end
 end
