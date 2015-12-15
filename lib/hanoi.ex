@@ -1,10 +1,6 @@
 defmodule Hanoi do
   def solve n do
-    moveTower(n, [:A, :B, :C])
-  end
-
-  def steps n do
-    [ size: n, moves: solve(n) ]
+    moveTower(n, [:A, :C, :B])
   end
 
   defp moveTower(0, _), do: []
@@ -14,46 +10,41 @@ defmodule Hanoi do
     moveTower(n - 1, [via, dest, source])
   end
 
-  defp moveDisk([a, b]), do: [[a, b]]
+  defp moveDisk([a, b]), do: [{ a, b }]
 
-  def inject_data size: n, moves: moves do
-    # [
-    # [:A, :b]  [{:A, a}, {:B, b}, {:C, b}]
-    moves |>
-    inject_data( A: Enum.to_list(1..n),
-                 B: [],
-                 C: [])
+  def play_sequence n do
+    start = { {:hanoi, :start }, A: Enum.to_list(1..n),
+                                 B: [],
+                                 C: [] }
+
+    _play_sequence(solve(n), [start])
   end
 
-  def inject_data moves, pegs do
-    moves |>
-    Enum.reduce(pegs, fn (move, acc) ->
-      [source | dest] = move
-      via = ([:A, :B, :C] -- [source, dest])
+  defp _play_sequence( [], state ), do: state
+  defp _play_sequence([current_move | moves], states) do
+    [ hd(states) | _play_sequence(moves, _play_sequence(current_move, states)) ]
+  end
 
-      IO.inspect via
-      IO.inspect [source, dest, via]
+  defp _play_sequence { source, dest }, state do
+    { move, pegs } = hd(state)
+    spare = hd([:A, :B, :C] -- [source, dest])
 
-      [ { ^source, source_tower },
-        { ^dest, dest_tower },
-        { ^via, via_tower }
-      ] = pegs
+    # towers
+    source_tower = pegs[source]
+    dest_tower   = pegs[dest]
+    spare_tower  = pegs[spare]
 
-      if length(pegs[source]) > 0 do
-        [
-          { source, tl(source_tower) },
-          { dest, [ hd(source_tower) | dest_tower ] },
-          { via, via_tower }
-        ]
-      else
-        [
-          { source, source_tower },
-          { dest, dest_tower },
-          { via, via_tower }
-        ]
-      end
-    end) |> Enum.map(fn (move, [A: a, B: b, C: c ]) ->
-      { move, a, b, c }
-    end)
+    result =
+    if !is_nil(source_tower) and length(source_tower) > 0 do
+      [ { source, tl(source_tower) },
+        { dest, [ hd(source_tower) | dest_tower ] },
+        { spare, spare_tower } ]
+    else
+      [ { source, source_tower },
+        { dest, dest_tower     },
+        { spare, spare_tower   } ]
+    end
+
+    [{ {source, dest} , List.keysort(result, 0) }]
   end
 end
