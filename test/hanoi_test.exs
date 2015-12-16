@@ -41,4 +41,27 @@ defmodule HanoIexTests do
       { {:B, :C},          A: [1],       B: [ ],    C: [2, 3]    },
       { {:A, :C},          A: [ ],       B: [ ],    C: [1, 2, 3] } ]
   end
+
+  test "ui" do
+    seq = Hanoi.play_sequence(1)
+
+    [start, _] = seq
+
+    [ move: [from, to],
+      pegs: [
+        A: [ tall: n,  disks: a ],
+        B: [ tall: n,  disks: b ],
+        C: [ tall: n,  disks: c ]
+      ]
+    ]  = Hanoi.ui(start)
+
+    assert from == "Hanoi"
+    assert to == "Start"
+    assert n == 1
+
+    assert a == [1]
+    assert b == []
+    assert c == []
+  end
+
 end

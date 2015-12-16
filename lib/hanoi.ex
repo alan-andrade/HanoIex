@@ -1,4 +1,7 @@
 defmodule Hanoi do
+
+  # Solution
+
   def solve n do
     moveTower(n, [:A, :C, :B])
   end
@@ -12,7 +15,8 @@ defmodule Hanoi do
 
   defp moveDisk([a, b]), do: [{ a, b }]
 
-  # play sequence
+
+  # Play sequence
 
   def play_sequence n do
     start = { {:hanoi, :start }, A: Enum.to_list(1..n),
@@ -43,5 +47,24 @@ defmodule Hanoi do
     ], 0)
 
     [ { {source, dest} , result } ]
+  end
+
+
+  # UI
+
+  def ui state do
+    import String
+
+    {{ from, to}, A: a, B: b, C: c } = state
+
+    n = Enum.count(a ++ b ++ c)
+
+    [ move: [ capitalize(to_string(from)), capitalize(to_string((to))) ],
+      pegs: [
+        A: [ tall: n,  disks: a ],
+        B: [ tall: n,  disks: b ],
+        C: [ tall: n,  disks: c ]
+      ]
+    ]
   end
 end
