@@ -2,32 +2,17 @@ defmodule UITest do
   use ExUnit.Case
 
   defmodule UI do
-    def draw_peg({ [], height }, level: _) do
-      space = for _c <- 1..height, into: "", do: " "
-      space <> "|" <> space
+    def draw_peg {stack, height}, level: level do
+      size = Enum.reverse(stack) |> Enum.at(level, 0)
+
+      str = if size > 0, do: "#", else: "|"
+      disk  = repeat(str, (size * 2 + 1)) # times 2 is both sides, plus one is the center piece.
+      space = repeat(" ", height - size)
+      space <> disk <> space
     end
 
-    def draw_peg peg, level: level do
-      { stack, height } = peg
-
-      val = Enum.at(Enum.reverse(stack), level)
-
-      if is_nil val do
-        draw_peg({[], height}, level: level)
-      else
-        w = height - val
-        space = if w > 0 do
-          for _c <- 1..w, into: "", do: " "
-        else
-          ""
-        end
-
-        side = for _c <- 1..val, into: "", do: "#"
-        disk = "#"
-        space <> side <> disk <> side <> space
-      end
-    end
-
+    defp repeat(str, 0), do: ""
+    defp repeat(str, n), do: for _ <- 1..n, into: "", do: str
   end
 
   test "render frame" do
