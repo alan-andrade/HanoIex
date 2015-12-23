@@ -3,15 +3,13 @@ defmodule UITest do
 
   defmodule UI do
     def frame pegs do
-      { _, size } = hd pegs
+      { stack, size } = hd pegs
 
-      IO.inspect size
-
-      for level <- (size-1)..0 do
-        Enum.reduce(pegs, "", fn(peg, acc) ->
-          draw(peg, level: level) ++ acc
-        end)
-      end
+      (for level <- (size-1..0) do
+        for peg <- pegs, into: "" do
+          draw_peg(peg, level: level)
+        end
+      end |> Enum.join("\n")) <> "\n"
     end
 
     def draw pegs, level: level do
@@ -81,7 +79,13 @@ defmodule UITest do
     pegs = [ { [1], 2},
              { [],  2} ]
 
-    assert UI.frame(pegs) == "  |    |  " <>
-                             " ###   |  "
+    assert UI.frame(pegs) == "  |    |  \n" <>
+                             " ###   |  \n"
+
+    pegs = [ { [1], 2},
+             { [2], 2} ]
+
+    assert UI.frame(pegs) == "  |    |  \n" <>
+                             " ### #####\n"
   end
 end
