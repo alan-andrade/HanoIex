@@ -2,6 +2,21 @@ defmodule UITest do
   use ExUnit.Case
 
   defmodule UI do
+    def player n do
+      Hanoi.play_sequence(n) |>
+      Enum.map(&UI.prepare(&1)) |>
+      Enum.map(&UI.frame&1)
+    end
+
+    def prepare step do
+      # { {:A, :C}, A: [ ], B: [], C: [1] }
+      { move, [A: a, B: b, C: c] } = step
+      size = Enum.count a ++ b ++ c
+
+      # ignoring move for now, just pegs
+      [ {a, size}, {b, size}, {c, size} ]
+    end
+
     def frame pegs do
       { stack, size } = hd pegs
 
@@ -75,7 +90,7 @@ defmodule UITest do
     assert UI.draw(pegs, level: 0) == "#####  |  "
   end
 
-  test "render game" do
+  test "render frame" do
     pegs = [ { [1], 2},
              { [],  2} ]
 
@@ -87,5 +102,10 @@ defmodule UITest do
 
     assert UI.frame(pegs) == "  |    |  \n" <>
                              " ### #####\n"
+  end
+
+  test "integration" do
+    step = hd(Hanoi.play_sequence(1))
+    assert UI.prepare(step) == [{[1], 1}, {[], 1}, {[], 1}]
   end
 end
