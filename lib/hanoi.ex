@@ -1,7 +1,5 @@
-defmodule Hanoi do
-
+defmodule Hanoi.Solver do
   # Solution
-
   def solve n do
     moveTower(n, [:A, :C, :B])
   end
@@ -14,10 +12,12 @@ defmodule Hanoi do
   end
 
   defp moveDisk([a, b]), do: [{ a, b }]
+end
 
+defmodule Hanoi.Sequencer do
+  import Hanoi.Solver
 
   # Play sequence
-
   def play_sequence n do
     start = { {:hanoi, :start }, A: Enum.to_list(1..n),
                                  B: [],
@@ -48,23 +48,49 @@ defmodule Hanoi do
 
     [ { {source, dest} , result } ]
   end
+end
 
+defmodule Hanoi.UI do
+  import Hanoi.Sequencer
 
-  # UI
-
-  def ui state do
-    import String
-
-    {{ from, to}, A: a, B: b, C: c } = state
-
-    n = Enum.count(a ++ b ++ c)
-
-    [ move: [ capitalize(to_string(from)), capitalize(to_string((to))) ],
-      pegs: [
-        A: [ tall: n,  disks: a ],
-        B: [ tall: n,  disks: b ],
-        C: [ tall: n,  disks: c ]
-      ]
-    ]
+  def player n do
+    play_sequence(n) |>
+    Enum.map(&prepare(&1)) |>
+    Enum.map(&frame&1)
   end
+
+  def prepare step do
+    # { {:A, :C}, A: [ ], B: [], C: [1] }
+    { _move, [A: a, B: b, C: c] } = step
+    size = Enum.count a ++ b ++ c
+
+    # ignoring move for now, just pegs
+    [ {a, size}, {b, size}, {c, size} ]
+  end
+
+  def frame pegs do
+    { _stack, size } = hd pegs
+
+    (for level <- (size-1..0) do
+      for peg <- pegs, into: "" do
+        draw_peg(peg, level: level)
+      end
+    end |> Enum.join("\n")) <> "\n"
+  end
+
+  def draw pegs, level: level do
+    for peg <- pegs, into: "", do: draw_peg(peg, level: level)
+  end
+
+  def draw_peg {stack, height}, level: level do
+    size = Enum.reverse(stack) |> Enum.at(level, 0)
+
+    str = if size > 0, do: "#", else: "|"
+    disk  = repeat(str, (size * 2 + 1)) # times 2 is both sides, plus one is the center piece.
+    space = repeat(" ", height - size)
+    space <> disk <> space
+  end
+
+  defp repeat(_, 0), do: ""
+  defp repeat(str, n), do: for _ <- 1..n, into: "", do: str
 end
