@@ -62,16 +62,16 @@ defmodule Hanoi.UI do
   def prepare step do
     # { {:A, :C}, A: [ ], B: [], C: [1] }
     { _move, [A: a, B: b, C: c] } = step
-    size = Enum.count a ++ b ++ c
+    mag = Enum.count a ++ b ++ c
 
     # ignoring move for now, just pegs
-    [ {a, size}, {b, size}, {c, size} ]
+    [ {a, mag}, {b, mag}, {c, mag} ]
   end
 
   def frame pegs do
-    { _stack, size } = hd pegs
+    { _stack, mag } = hd pegs
 
-    (for level <- (size-1..0) do
+    (for level <- (mag..0) do
       for peg <- pegs, into: "" do
         draw_peg(peg, level: level)
       end
@@ -83,11 +83,19 @@ defmodule Hanoi.UI do
   end
 
   def draw_peg {stack, height}, level: level do
-    size = Enum.reverse(stack) |> Enum.at(level, 0)
+    mag = Enum.reverse(stack) |> Enum.at(level, 0)
+    draw_peg(mag, height)
+  end
 
-    str = if size > 0, do: "#", else: "|"
-    disk  = repeat(str, (size * 2 + 1)) # times 2 is both sides, plus one is the center piece.
-    space = repeat(" ", height - size)
+  def draw_peg 0, height do
+    stem = repeat("|", 1)
+    space = repeat(" ", height - 1)
+    space <> stem <> space
+  end
+
+  def draw_peg mag, height do
+    disk  = repeat("#", (mag - 1) * 2 + 1)
+    space = repeat(" ", height - mag)
     space <> disk <> space
   end
 
