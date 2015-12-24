@@ -93,4 +93,17 @@ defmodule Hanoi.UI do
 
   defp repeat(_, 0), do: ""
   defp repeat(str, n), do: for _ <- 1..n, into: "", do: str
+
+  def run do
+    _run(player(4), 0)
+  end
+
+  def _run player, pos do
+    IO.puts IO.ANSI.clear <> IO.ANSI.home <> Enum.at(player, pos)
+
+    case String.strip(IO.read(:line)) do
+      "k" -> _run(player, pos+1)
+      "j" -> _run(player, pos-1)
+    end
+  end
 end

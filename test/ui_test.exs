@@ -3,13 +3,11 @@ defmodule UITest do
 
   import Hanoi.UI
 
-  test "draws empty peg" do
+  test "draw peg" do
     peg = { [], 2 }
     assert draw_peg(peg, level: 1) == "  |  "
     assert draw_peg(peg, level: 0) == "  |  "
-  end
 
-  test "" do
     peg = { [1], 2 }
     assert draw_peg(peg, level: 1) == "  |  "
     assert draw_peg(peg, level: 0) == " ### "
@@ -56,18 +54,22 @@ defmodule UITest do
              { [],  2} ]
 
     assert frame(pegs) == "  |    |  \n" <>
-                             " ###   |  \n"
+                          " ###   |  \n"
 
     pegs = [ { [1], 2},
              { [2], 2} ]
 
     assert frame(pegs) == "  |    |  \n" <>
-                             " ### #####\n"
+                          " ### #####\n"
   end
 
   test "integration" do
     import Hanoi.Sequencer
     step = hd(play_sequence(1))
     assert prepare(step) == [{[1], 1}, {[], 1}, {[], 1}]
+  end
+
+  test "run" do
+    Hanoi.UI.run
   end
 end
