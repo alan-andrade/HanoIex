@@ -78,8 +78,4 @@ defmodule UITest do
     step = hd(play_sequence(1))
     assert prepare(step) == [{[1], 1}, {[], 1}, {[], 1}]
   end
-
-  test "run" do
-    # Hanoi.UI.run
-  end
 end

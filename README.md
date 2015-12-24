@@ -1,5 +1,19 @@
 # HanoIex
 
-Hanoi towers in Elixir with a seekable interface across the execution of
-the algorithm. Visualize it in your terminal and learn about the state
-of variable.
+Towers of Hanoi visualization.
+
+# Goals
+
+- Provide a new perspective into code
+- Help to understand recursion
+
+# Run
+
+`mix run main.exs`
+
+Press k "Enter" to step forward
+Press j "Enter" to step backwards
+
+# Tests
+
+`mix test`
