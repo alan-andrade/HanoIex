@@ -72,10 +72,4 @@ defmodule UITest do
                           " |  | \n" <>
                           " # ###\n"
   end
-
-  test "integration" do
-    import Hanoi.Sequencer
-    step = hd(play_sequence(1))
-    assert prepare(step) == [{[1], 1}, {[], 1}, {[], 1}]
-  end
 end
