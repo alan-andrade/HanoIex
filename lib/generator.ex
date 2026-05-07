@@ -1,5 +1,5 @@
 defmodule Hanoi.Generator do
-  def gen n do
+  def gen(n) do
     start = { {:hanoi, :start },
       A: Enum.to_list(1..n),
       B: [],
@@ -8,13 +8,13 @@ defmodule Hanoi.Generator do
     _play_sequence(moveTower(n, [:A, :C, :B]), [start])
   end
 
-  defp _play_sequence( [], state ), do: state
+  defp _play_sequence([], state), do: state
   defp _play_sequence([current_move | moves], states) do
     [ hd(states) | _play_sequence(moves, _play_sequence(current_move, states)) ]
   end
 
-  defp _play_sequence { source, dest }, state do
-    { _, pegs } = hd(state)
+  defp _play_sequence({source, dest}, state) do
+    {_, pegs} = hd(state)
     spare = hd([:A, :B, :C] -- [source, dest])
 
     # towers
